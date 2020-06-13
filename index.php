@@ -1,9 +1,11 @@
 <?php
+    require_once('functions.php');
+
     $data = $_POST;
     
     $date= $_POST['date'];
     $content = $_POST['content'];
-    $dataPath = dirname(__FILE__) . "/data/";
+    $dataPath = getDataPath();
     //入力データを.txtファイルとして保存
     if(!empty($data)){   
         $title=$_POST['title'];
@@ -24,14 +26,8 @@
         $contents = [];
     }
     $date = date('Y,m,d');
-    
-    $files = glob($dataPath."*");//.dataディレクトリ内の全てのファイルパスを取得
-    $fileList = [];//ファイル名とファイルパスが入る配列の作成
-    foreach($files as $file){//foreachで繰り返しglob処理を行っている。
-        $fileList[] = pathinfo($file, PATHINFO_FILENAME);
-        //foreachで$fileに格納されたファイル名を$fileListという配列に格納。
-    }
-    //var_dump($fileList); //$fileListが作られているか確認している。
+
+    $fileList = getFileList();
 ?>
 
 <!--detail.php（自分自身）にタイトル、日付、内容を送信-->
@@ -50,11 +46,9 @@ content:<br>
 </form>
 
 
-<form action="detail.php" method="GET">
-    <?php foreach($fileList as $file):?>
-    <a href= "detail.php" id=<?php echo $file; ?>"><?php echo $file ?><br></a>
-    <?php endforeach; ?>
-</form>
+<?php foreach($fileList as $file):?>
+<a href= "detail.php?id=<?php echo $file ?>" id="<?php echo $file; ?>"><?php echo $file ?><br></a>
+<?php endforeach; ?>
 </body>
 </html>
 <p><?php var_dump($contents);?></p>
